@@ -1,0 +1,141 @@
+<div class="min-h-screen flex items-center justify-center bg-[var(--color-canvas)] px-4 py-12">
+  <div class="w-full max-w-sm">
+    <!-- Brand -->
+    <div class="flex items-center justify-center gap-2 mb-8">
+      <span
+        class="inline-flex w-9 h-9 rounded-[var(--radius-sm)]
+               bg-[var(--color-brand-500)] text-white items-center justify-center
+               font-semibold">A</span>
+      <span class="text-base font-semibold tracking-tight">Analytics&nbsp;Hub</span>
+    </div>
+
+    @if (mode() === 'add-shop') {
+      <!-- Register New Shop form -->
+      <div class="surface p-6">
+        <h1 class="text-lg font-semibold">Register new shop</h1>
+        <p class="text-sm text-[var(--color-text-secondary)] mt-1 mb-5">
+          Sign in with your existing account and enter the new store's database details.
+        </p>
+
+        <form [formGroup]="shopForm" (ngSubmit)="onSubmitShop()" class="space-y-4">
+          <!-- Credentials -->
+          <div>
+            <label class="label" for="shop-email">Email</label>
+            <input id="shop-email" type="email" autocomplete="email"
+                   class="input" formControlName="email"
+                   placeholder="you@store.com" />
+          </div>
+          <div>
+            <label class="label" for="shop-password">Password</label>
+            <input id="shop-password" type="password" autocomplete="current-password"
+                   class="input" formControlName="password"
+                   placeholder="••••••••" />
+          </div>
+
+          <!-- DB connection -->
+          <div class="pt-2 border-t border-[var(--color-border-subtle)]">
+            <p class="text-xs font-medium text-[var(--color-text-secondary)] mb-3 uppercase tracking-wide">
+              Database connection
+            </p>
+            <div class="space-y-3">
+              <div class="grid grid-cols-3 gap-2">
+                <div class="col-span-2">
+                  <label class="label" for="shop-host">Host</label>
+                  <input id="shop-host" type="text" class="input"
+                         formControlName="dbHost" placeholder="localhost" />
+                </div>
+                <div>
+                  <label class="label" for="shop-port">Port</label>
+                  <input id="shop-port" type="number" class="input"
+                         formControlName="dbPort" placeholder="5432" />
+                </div>
+              </div>
+              <div>
+                <label class="label" for="shop-dbname">Database name</label>
+                <input id="shop-dbname" type="text" class="input"
+                       formControlName="dbName" placeholder="my_store_db" />
+              </div>
+              <div>
+                <label class="label" for="shop-dbuser">DB username</label>
+                <input id="shop-dbuser" type="text" autocomplete="off"
+                       class="input" formControlName="dbUser" placeholder="postgres" />
+              </div>
+              <div>
+                <label class="label" for="shop-dbpassword">DB password</label>
+                <input id="shop-dbpassword" type="password" autocomplete="new-password"
+                       class="input" formControlName="dbPassword" placeholder="••••••••" />
+              </div>
+            </div>
+          </div>
+
+          @if (authStore.error()) {
+            <p class="text-xs text-[var(--color-danger)]">{{ authStore.error() }}</p>
+          }
+
+          <button type="submit" class="btn btn-primary w-full"
+                  [disabled]="shopForm.invalid || authStore.isLoading()">
+            {{ authStore.isLoading() ? 'Registering…' : 'Register shop' }}
+          </button>
+        </form>
+      </div>
+
+      <p class="text-center text-sm text-[var(--color-text-secondary)] mt-4">
+        <button type="button"
+                class="font-medium text-[var(--color-brand-600)] hover:text-[var(--color-brand-700)]"
+                (click)="exitAddShop()">
+          ← Back to sign in
+        </button>
+      </p>
+
+    } @else {
+      <!-- Normal login form -->
+      <div class="surface p-6">
+        <h1 class="text-lg font-semibold">Sign in</h1>
+        <p class="text-sm text-[var(--color-text-secondary)] mt-1 mb-5">
+          Use your store credentials.
+        </p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <label class="label" for="email">Email</label>
+            <input id="email" type="email" autocomplete="email"
+                   class="input" formControlName="email"
+                   placeholder="you@store.com" />
+          </div>
+
+          <div>
+            <label class="label" for="password">Password</label>
+            <input id="password" type="password" autocomplete="current-password"
+                   class="input" formControlName="password"
+                   placeholder="••••••••" />
+          </div>
+
+          @if (authStore.error()) {
+            <p class="text-xs text-[var(--color-danger)]">{{ authStore.error() }}</p>
+          }
+
+          <button type="submit" class="btn btn-primary w-full"
+                  [disabled]="loginForm.invalid || authStore.isLoading()">
+            {{ authStore.isLoading() ? 'Signing in…' : 'Sign in' }}
+          </button>
+        </form>
+
+        <div class="mt-4 pt-4 border-t border-[var(--color-border-subtle)]">
+          <button type="button" class="btn w-full text-sm"
+                  [disabled]="authStore.isLoading()"
+                  (click)="enterAddShop()">
+            Register new shop
+          </button>
+        </div>
+      </div>
+
+      <p class="text-center text-sm text-[var(--color-text-secondary)] mt-4">
+        Need an account?
+        <a routerLink="/register"
+           class="font-medium text-[var(--color-brand-600)] hover:text-[var(--color-brand-700)]">
+          Register
+        </a>
+      </p>
+    }
+  </div>
+</div>

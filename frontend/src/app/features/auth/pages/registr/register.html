@@ -1,0 +1,156 @@
+<div class="min-h-screen flex items-center justify-center bg-[var(--color-canvas)] px-4 py-12">
+  <div class="w-full max-w-sm">
+    <div class="flex items-center justify-center gap-2 mb-8">
+      <span
+        class="inline-flex w-9 h-9 rounded-[var(--radius-sm)]
+               bg-[var(--color-brand-500)] text-white items-center justify-center
+               font-semibold">A</span>
+      <span class="text-base font-semibold tracking-tight">Analytics&nbsp;Hub</span>
+    </div>
+
+      <!-- Registration form -->
+      <div class="surface p-6">
+        <h1 class="text-lg font-semibold">Create account</h1>
+        <p class="text-sm text-[var(--color-text-secondary)] mt-1 mb-5">
+          Set up access for your store.
+        </p>
+
+        <!-- Role selector -->
+        @if (!selectedRole()) {
+          <p class="text-sm font-medium mb-3">I am registering as</p>
+          <div class="grid grid-cols-2 gap-3 mb-2">
+            <button
+              type="button"
+              class="flex flex-col items-center gap-2 p-4 rounded-[var(--radius-md)]
+                     border-2 border-[var(--color-border-subtle)]
+                     hover:border-[var(--color-brand-500)] hover:bg-[var(--color-canvas)]
+                     transition-colors text-sm font-medium"
+              (click)="selectRole('admin')">
+              <svg class="w-6 h-6 text-[var(--color-text-secondary)]" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 0115 0" />
+              </svg>
+              Admin
+            </button>
+            <button
+              type="button"
+              class="flex flex-col items-center gap-2 p-4 rounded-[var(--radius-md)]
+                     border-2 border-[var(--color-border-subtle)]
+                     hover:border-[var(--color-brand-500)] hover:bg-[var(--color-canvas)]
+                     transition-colors text-sm font-medium"
+              (click)="selectRole('owner')">
+              <svg class="w-6 h-6 text-[var(--color-text-secondary)]" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5
+                         0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5
+                         11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0
+                         009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0
+                         002.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001
+                         0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318
+                         3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19
+                         1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0
+                         00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0
+                         00-.75.75v3.75c0 .415.336.75.75.75z" />
+              </svg>
+              Owner
+            </button>
+          </div>
+
+        } @else {
+          <!-- Selected role badge + change link -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium
+                         bg-[var(--color-brand-100)] text-[var(--color-brand-700)]">
+              {{ selectedRole() === 'owner' ? 'Owner' : 'Admin' }}
+            </span>
+            <button type="button"
+                    class="text-xs text-[var(--color-text-secondary)]
+                           hover:text-[var(--color-text-primary)] transition-colors"
+                    (click)="selectRole(null)">
+              Change
+            </button>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+            <!-- Account fields -->
+            <div>
+              <label class="label" for="username">Name</label>
+              <input id="username" type="text" autocomplete="name"
+                     class="input" formControlName="username"
+                     placeholder="Jane Owner" />
+            </div>
+            <div>
+              <label class="label" for="email">Email</label>
+              <input id="email" type="email" autocomplete="email"
+                     class="input" formControlName="email"
+                     placeholder="you@store.com" />
+            </div>
+            <div>
+              <label class="label" for="password">Password</label>
+              <input id="password" type="password" autocomplete="new-password"
+                     class="input" formControlName="password"
+                     placeholder="At least 6 characters" />
+            </div>
+
+            @if (selectedRole() === 'owner') {
+              <!-- DB connection fields -->
+              <div class="pt-2 border-t border-[var(--color-border-subtle)]">
+                <p class="text-xs font-medium text-[var(--color-text-secondary)] mb-3 uppercase tracking-wide">
+                  Database connection
+                </p>
+                <div class="space-y-3">
+                  <div class="grid grid-cols-3 gap-2">
+                    <div class="col-span-2">
+                      <label class="label" for="dbHost">Host</label>
+                      <input id="dbHost" type="text" class="input"
+                             formControlName="dbHost" placeholder="localhost" />
+                    </div>
+                    <div>
+                      <label class="label" for="dbPort">Port</label>
+                      <input id="dbPort" type="number" class="input"
+                             formControlName="dbPort" placeholder="5432" />
+                    </div>
+                  </div>
+                  <div>
+                    <label class="label" for="dbName">Database name</label>
+                    <input id="dbName" type="text" class="input"
+                           formControlName="dbName" placeholder="my_store_db" />
+                  </div>
+                  <div>
+                    <label class="label" for="dbUser">DB username</label>
+                    <input id="dbUser" type="text" autocomplete="new-password"
+                           readonly onfocus="this.removeAttribute('readonly')"
+                           class="input" formControlName="dbUser" placeholder="postgres" />
+                  </div>
+                  <div>
+                    <label class="label" for="dbPassword">DB password</label>
+                    <input id="dbPassword" type="password" autocomplete="new-password"
+                           class="input" formControlName="dbPassword" placeholder="••••••••" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @if (authStore.error()) {
+              <p class="text-xs text-[var(--color-danger)]">{{ authStore.error() }}</p>
+            }
+
+            <button type="submit" class="btn btn-primary w-full"
+                    [disabled]="!isFormReady || authStore.isLoading()">
+              {{ authStore.isLoading() ? 'Creating account…' : 'Create account' }}
+            </button>
+          </form>
+        }
+      </div>
+
+      <p class="text-center text-sm text-[var(--color-text-secondary)] mt-4">
+        Already have an account?
+        <a routerLink="/login"
+           class="font-medium text-[var(--color-brand-600)] hover:text-[var(--color-brand-700)]">
+          Sign in
+        </a>
+      </p>
+  </div>
+</div>

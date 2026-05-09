@@ -1,0 +1,33 @@
+<section class="dashboard-root">
+  <header class="dashboard-header">
+    <h2>Business Pulse</h2>
+    <div class="actions">
+      <button (click)="load()">Refresh</button>
+    </div>
+  </header>
+
+  <div *ngIf="error()" class="error">{{ error() }}</div>
+
+  <div *ngIf="loading()" class="kpi-grid">
+    <div class="kpi-card skeleton" aria-hidden="true"></div>
+    <div class="kpi-card skeleton" aria-hidden="true"></div>
+    <div class="kpi-card skeleton" aria-hidden="true"></div>
+  </div>
+
+  <div *ngIf="!loading() && kpis().length === 0" class="empty">
+    No dashboard data available.
+  </div>
+
+  <div *ngIf="!loading() && kpis().length > 0" class="kpi-grid">
+    <article class="kpi-card" *ngFor="let k of kpis()" role="group" [attr.aria-label]="k.title">
+      <div class="kpi-title">{{ k.title }}</div>
+      <div class="kpi-value">{{ k.value }}</div>
+      <div class="kpi-meta">{{ k.detail }}</div>
+    </article>
+  </div>
+
+  <section class="chart-area">
+    <div class="chart-placeholder">Sales / Volume chart (placeholder)</div>
+    <aside class="chart-side">Filters and notes</aside>
+  </section>
+</section>
